@@ -1,0 +1,27 @@
+# depslib dependency file v1.0
+1549043585 source:c:\users\Вася\documents\programs(trash)\aes\main.cpp
+	<iostream>
+	<string>
+	"bitstring.h"
+	<string.h>
+	"DES_Utils.h"
+
+1549041400 c:\users\Вася\documents\programs(trash)\aes\include\bitstring.h
+	<iostream>
+	<vector>
+	<string>
+	<cmath>
+	<string.h>
+
+1549041377 source:c:\users\Вася\documents\programs(trash)\aes\src\bitstring.cpp
+	"bitstring.h"
+
+1548706824 c:\users\Вася\documents\programs(trash)\aes\include\des_utils.h
+	<iostream>
+	<bitstring.h>
+	<stdlib.h>
+	<ctime>
+
+1549043625 source:c:\users\Вася\documents\programs(trash)\aes\src\des_utils.cpp
+	"DES_Utils.h"
+
