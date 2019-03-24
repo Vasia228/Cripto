@@ -15,21 +15,27 @@ bitstring::bitstring(string& str)
         tmp= (int)str[i]-SHIFT;
         if (tmp>25 || tmp<0) continue;
         iter= 0;
-        memset(buffer, 0, sizeof(buffer));
 
-        while (tmp>0)
+        for (int j = 0; j<5; j++)
         {
-            buffer[4-iter]=tmp%2;
-            tmp=tmp/2;
+            if (tmp>0)
+            {
+                buffer[4-iter]=tmp%2;
+                tmp=tmp/2;
+            }
+            else
+            {
+                buffer[4-iter] = 0;
+            }
             iter++;
         }
-        for (int i= 0; i<5; i++)data.push_back(buffer[i]);
+        for (int k= 0; k<5; k++)data.push_back(buffer[k]);
     }
 }
 
-bitstring::bitstring(int num)
+bitstring::bitstring(int num):bitstring(num, 0)
 {
-    bitstring(num, 0);
+
 }
 
 bitstring::bitstring(int num, int element_size)
@@ -93,7 +99,7 @@ bitstring::bitstring(bitstring& str_bit, int start_index, int size_of_slice)
 
 bitstring::~bitstring()
 {
-    delete &data;
+    //delete &data;
 }
 
 /////////////////////////////////////////////////////////////////////////overloaded operators
@@ -157,6 +163,119 @@ bitstring& bitstring::operator^(bitstring& str_bit)
     return *tmp;
 }
 /////////////////////////////////////////////////////////////////////////methods
+
+bitstring& bitstring::plus(bitstring& str_bit)
+{
+    int i = data.size(), j = str_bit.get_size(), add = 0;
+    bitstring* temp = new bitstring;
+    i--;
+    j--;
+    int res = 0, a = 0, b = 0;
+    while (j >= 0 || i >= 0)
+    {
+        (i >= 0) ? (a = data[i]) : (a = 0);
+        (j >= 0) ? (b = str_bit[j]) : (b = 0);
+        res = a + b + add;
+        if (res == 2)
+        {
+            add = 1;
+            temp->push(0);
+        }
+        else if (res == 1)
+        {
+            add = 0;
+            temp->push(1);
+        }
+        else
+        {
+            add = 0;
+            temp->push(0);
+        }
+        i--;
+        j--;
+    }
+    if (add == 1)
+    {
+        temp->push(1);
+    }
+    temp->reverse();
+    return *temp;
+}
+
+bitstring& bitstring::minus(bitstring& str_bit)
+{
+    bitstring* temp = new bitstring;
+    bitstring origin;
+    origin = data;
+    int i = origin.get_size(), j = str_bit.get_size();
+    i--;
+    j--;
+    int res = 0, a = 0, b = 0, add = 0;
+    while (i >= 0)
+    {
+        a = origin[i];
+        (j >= 0) ? (b = str_bit[j]) : (b = 0);
+        if (a == 0 && b == 1)
+        {
+            add = i - 1;
+            while (add >= 0)
+            {
+                if (origin[add] == 1)
+                {
+                    origin(add, 0);
+                    break;
+                }
+                else
+                {
+                    origin(add, 1);
+                }
+                add--;
+            }
+        }
+        res = a - b;
+
+        if (res == 1 || res == -1)
+        {
+            temp->push(1);
+        }
+        else
+        {
+            temp->push(0);
+        }
+
+        i--;
+        j--;
+        add = 0;
+    }
+    temp->reverse();
+    /*for  (i = 0; i < temp->get_size(); i++)
+    {
+        if (temp->get_data(i) == 0)
+        {
+            add++;
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (add > 0 && add != temp->get_size())
+    {
+        temp = new bitstring(*temp, add, temp->get_size()-add);
+    }*/
+    return *temp;
+}
+
+void bitstring::reverse()
+{
+    bool temp;
+    for (int i = 0; i < data.size()/2 ; i++)
+    {
+        temp = data[i];
+        data[i] = data[(data.size()-1) - i];
+        data[(data.size()-1) - i] = temp;
+    }
+}
 
 void bitstring::tolow(string& str)
 {
@@ -222,6 +341,26 @@ void bitstring::cycle_rotate_left()
         data[i-1]= data[i];
     }
     data[data.size()-1]= tmp;
+}
+
+void bitstring::generate_2_pow(int pow)
+{
+    data.clear();
+    for (int i = 0; i< pow; i++)
+    {
+        data.push_back(1);
+    }
+}
+
+int bitstring::return_int()
+{
+    int str_size= data.size(), two= 1, num=0;
+    for (int i= 0; i<str_size; i++)
+    {
+        num+= data[(str_size-1)-i]*two;
+        two= two*2;
+    }
+    return num;
 }
 
 void bitstring::show(int size_of_slice)

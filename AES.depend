@@ -25,3 +25,38 @@
 1549043625 source:c:\users\Вася\documents\programs(trash)\aes\src\des_utils.cpp
 	"DES_Utils.h"
 
+1553399361 source:c:\users\Вася\documents\programs(trash)\cripto\main.cpp
+	<iostream>
+	<string>
+	"bitstring.h"
+	<string.h>
+	"Magma_Utils.h"
+
+1553401193 c:\users\Вася\documents\programs(trash)\cripto\include\bitstring.h
+	<iostream>
+	<vector>
+	<string>
+	<cmath>
+	<string.h>
+
+1548706824 c:\users\Вася\documents\programs(trash)\cripto\include\des_utils.h
+	<iostream>
+	<bitstring.h>
+	<stdlib.h>
+	<ctime>
+
+1553401393 source:c:\users\Вася\documents\programs(trash)\cripto\src\bitstring.cpp
+	"bitstring.h"
+
+1549043625 source:c:\users\Вася\documents\programs(trash)\cripto\src\des_utils.cpp
+	"DES_Utils.h"
+
+1553403996 c:\users\Вася\documents\programs(trash)\cripto\include\magma_utils.h
+	<iostream>
+	<bitstring.h>
+	<stdlib.h>
+	<ctime>
+
+1553404462 source:c:\users\Вася\documents\programs(trash)\cripto\src\magma_utils.cpp
+	"Magma_Utils.h"
+
