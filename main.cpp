@@ -18,6 +18,5 @@ int main()
     cout<<str_bit.to_string()<<endl;
     cout<<str_bit.get_size()<<endl;*/
     key = encrypt_Magma(str_bit, key);
-
     return 0;
 }
