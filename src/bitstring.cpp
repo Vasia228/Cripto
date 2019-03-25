@@ -163,6 +163,23 @@ bitstring& bitstring::operator^(bitstring& str_bit)
     return *tmp;
 }
 /////////////////////////////////////////////////////////////////////////methods
+void bitstring::initialize(int num, int element_size)
+{
+    vector<bool> tmp;
+    data.clear();
+    while (num>0)
+    {
+        tmp.push_back(num%2);
+        num= num/2;
+    }
+    int size_tmp= tmp.size();
+    if (element_size-size_tmp>0)
+    {
+        for (int i= 0; i<element_size-size_tmp; i++)data.push_back(0);
+    }
+    for (int i= 0; i<size_tmp; i++)data.push_back(tmp[(size_tmp-1)-i]);
+}
+
 
 bitstring& bitstring::plus(bitstring& str_bit)
 {
@@ -363,7 +380,7 @@ int bitstring::return_int()
     return num;
 }
 
-void bitstring::show(int size_of_slice)
+void bitstring::show(int size_of_slice, bool enter)
 {
     int space=0;
     for (int i= 0; i<data.size(); i++)
@@ -376,7 +393,10 @@ void bitstring::show(int size_of_slice)
         cout<<data[i];
         space++;
     }
-    cout<<endl;
+    if (enter)
+    {
+        cout<<endl;
+    }
 }
 
 void bitstring::show_size()

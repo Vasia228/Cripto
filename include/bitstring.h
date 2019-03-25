@@ -34,6 +34,7 @@ class bitstring
         bitstring& operator^(bitstring& str_bit);
 
         //methods
+        void initialize(int num, int element_size);
         bitstring& plus(bitstring& str_bit);
         bitstring& minus(bitstring& str_bit);
         void reverse();
@@ -41,14 +42,15 @@ class bitstring
         string to_string();
         void push(bool n);
         void clear_data();
-        bitstring& Hbit(int size_of_slice);
-        bitstring& Lbit(int size_of_slice); //return from left to right [abcd] = [bcd]
+        bitstring& Hbit(int size_of_slice); // return left part
+        bitstring& Lbit(int size_of_slice); //return right part
         void cycle_rotate_left(int n);
         void cycle_rotate_left();
         void generate_2_pow(int pow);
         int return_int();
-        void show(int size_of_slice= 5);
+        void show(int size_of_slice= 5, bool enter = true);
         void show_size();
+
 
         //getter
         int get_size(){return data.size();};
