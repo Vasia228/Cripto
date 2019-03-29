@@ -25,7 +25,7 @@
 1549043625 source:c:\users\Вася\documents\programs(trash)\aes\src\des_utils.cpp
 	"DES_Utils.h"
 
-1553539092 source:c:\users\Вася\documents\programs(trash)\cripto\main.cpp
+1553832218 source:c:\users\Вася\documents\programs(trash)\cripto\main.cpp
 	<iostream>
 	<string>
 	"bitstring.h"
@@ -61,16 +61,16 @@
 1553404548 source:c:\users\Вася\documents\programs(trash)\cripto\src\magma_utils.cpp
 	"Magma_Utils.h"
 
-1553542719 c:\users\Вася\documents\programs(trash)\cripto\include\bytematrix.h
+1553831266 c:\users\Вася\documents\programs(trash)\cripto\include\bytematrix.h
 	"bitstring.h"
 
-1553542792 source:c:\users\Вася\documents\programs(trash)\cripto\src\bytematrix.cpp
+1553832194 source:c:\users\Вася\documents\programs(trash)\cripto\src\bytematrix.cpp
 	"ByteMatrix.h"
 
-1553543035 source:c:\users\Вася\documents\programs(trash)\cripto\src\aes_utils.cpp
+1553832267 source:c:\users\Вася\documents\programs(trash)\cripto\src\aes_utils.cpp
 	"AES_Utils.h"
 
-1553538760 c:\users\Вася\documents\programs(trash)\cripto\include\aes_utils.h
+1553831063 c:\users\Вася\documents\programs(trash)\cripto\include\aes_utils.h
 	<iostream>
 	<stdlib.h>
 	<ctime>

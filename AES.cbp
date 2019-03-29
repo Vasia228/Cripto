@@ -34,10 +34,16 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/AES_Utils.h" />
+		<Unit filename="include/ByteMatrix.h" />
 		<Unit filename="include/DES_Utils.h" />
+		<Unit filename="include/Magma_Utils.h" />
 		<Unit filename="include/bitstring.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/AES_Utils.cpp" />
+		<Unit filename="src/ByteMatrix.cpp" />
 		<Unit filename="src/DES_Utils.cpp" />
+		<Unit filename="src/Magma_Utils.cpp" />
 		<Unit filename="src/bitstring.cpp" />
 		<Extensions>
 			<code_completion />

@@ -1,4 +1,5 @@
 #include "AES_Utils.h"
+using namespace std;
 
 const short int S_BOX_MATRIX[16][16][2] = {
 {{6, 3}, {7, 12}, {7, 7}, {7, 11}, {15, 2}, {6, 11}, {6, 15}, {12, 5}, {3, 0}, {0, 1}, {6, 7}, {2, 11}, {15, 14}, {13, 7}, {10, 11}, {7, 6}},
@@ -42,7 +43,10 @@ const short int Rcon[11][2] = {{0, 0}, {0, 1}, {0, 2}, {0, 4}, {0, 8}, {1, 0}, {
 
 bitstring& encrypt_AES(bitstring& str_bit, bitstring& key)
 {
-    generate_key_AES(key);
+    if (key.get_size()!= 128)
+    {
+        generate_key_AES(key);
+    }
     ByteMatrix* shedule = new ByteMatrix[11];
     for (int i = 0; i<11; i++)
     {
@@ -50,10 +54,12 @@ bitstring& encrypt_AES(bitstring& str_bit, bitstring& key)
     }
     create_key_shedule_AES(key, shedule);
 
-    /*bitstring tmp(str_bit, 0, 128);
+    bitstring tmp(str_bit, 0, 128);
     tmp.show(64);
     encrypt_block_AES(tmp, shedule);
-    tmp.show(64);*/
+    tmp.show(64);
+    decrypt_block_AES(tmp, shedule);
+    tmp.show(64);
 
     return key;
 }
@@ -98,7 +104,7 @@ void create_key_shedule_AES(bitstring key, ByteMatrix* shedule)
         //errase last collumn
         for (int i = 0; i<3; i++)
         {
-            collumn[i] = shedule[iteration].get_byte(i+1, 3);
+            collumn[i] = shedule[iteration-1].get_byte(i+1, 3);
         }
         //apply sbox
         for (int i = 0; i<4; i++)
@@ -132,10 +138,6 @@ void create_key_shedule_AES(bitstring key, ByteMatrix* shedule)
 
     }
 
-
-
-
-
 }
 
 
@@ -155,5 +157,189 @@ void apply_Rcon(bitstring* collumn, int index)
 
 bool encrypt_block_AES(bitstring& block, ByteMatrix* shedule)
 {
+    //feel state
+    int index = 0;
+    bitstring temp, a, b;
+    ByteMatrix state(4, 4);
+    for (int i = 0; i<4; i++)
+    {
+        for (int j = 0; j< 4; j++)
+        {
+            temp.clear_data();
+            for (int k = index; k<index+8;k++)
+            {
+                temp.push(block[k]);
+            }
+            index += 8;
+            state.set_byte(j, i, temp);
+        }
+    }
+
+    add_round_key(&state, &shedule[0]);
+
+    for (int index = 1; index < 10; index++)
+    {
+        sub_byte(&state);
+        shift_rows(&state);
+        mix_colums(&state);
+        add_round_key(&state, &shedule[index]);
+    }
+    sub_byte(&state);
+    shift_rows(&state);
+    add_round_key(&state, &shedule[10]);
+
+    block.clear_data();
+    for (int i = 0; i<4; i++)
+    {
+        for (int j = 0; j< 4; j++)
+        {
+            temp = state.get_byte(j, i);
+            block += temp;
+        }
+    }
+}
+
+
+bool add_round_key(ByteMatrix* state, ByteMatrix* key)
+{
+    bitstring temp;
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            temp = state->get_byte(i, j);
+            temp = temp^key->get_byte(i ,j);
+            state->set_byte(i, j, temp);
+        }
+    }
+}
+
+
+void sub_byte(ByteMatrix* state)
+{
+    bitstring a, b;
+    short int new_byte[2]{0};
+    for (int j = 0; j<4; j++)
+    {
+        for (int i = 0; i<4; i++)
+        {
+            a = state->get_byte(i, j).Hbit(4);
+            b = state->get_byte(i, j).Lbit(4);
+            new_byte[0] = S_BOX_MATRIX[a.return_int()][b.return_int()][0];
+            new_byte[1] = S_BOX_MATRIX[a.return_int()][b.return_int()][1];
+            a.initialize(new_byte[0], 4);
+            b.initialize(new_byte[1], 4);
+            state->set_byte(i, j, a + b);
+        }
+    }
+}
+
+
+void shift_rows(ByteMatrix* state)
+{
+    for (int i = 1; i<4; i++)
+    {
+        state->cycle_rotate_left(i, i);
+    }
+}
+
+
+void mix_colums(ByteMatrix* state)
+{
 
 }
+
+
+bool decrypt_block_AES(bitstring& block, ByteMatrix* shedule)
+{
+    //feel state
+    int index = 0;
+    bitstring temp, a, b;
+    ByteMatrix state(4, 4);
+    for (int i = 0; i<4; i++)
+    {
+        for (int j = 0; j< 4; j++)
+        {
+            temp.clear_data();
+            for (int k = index; k<index+8;k++)
+            {
+                temp.push(block[k]);
+            }
+            index += 8;
+            state.set_byte(j, i, temp);
+        }
+    }
+
+    add_round_key(&state, &shedule[10]);
+    inv_shift_rows(&state);
+    inv_sub_byte(&state);
+
+    for (int index = 1; index < 10; index++)
+    {
+        add_round_key(&state, &shedule[10-index]);
+        mix_colums(&state);
+        inv_shift_rows(&state);
+        inv_sub_byte(&state);
+    }
+
+    add_round_key(&state, &shedule[0]);
+
+    block.clear_data();
+    for (int i = 0; i<4; i++)
+    {
+        for (int j = 0; j< 4; j++)
+        {
+            temp = state.get_byte(j, i);
+            block += temp;
+        }
+    }
+}
+
+
+void inv_sub_byte(ByteMatrix* state)
+{
+    bitstring a, b;
+    short int new_byte[2]{0};
+    for (int j = 0; j<4; j++)
+    {
+        for (int i = 0; i<4; i++)
+        {
+            a = state->get_byte(i, j).Hbit(4);
+            b = state->get_byte(i, j).Lbit(4);
+            new_byte[0] = INV_S_BOX_MATRIX[a.return_int()][b.return_int()][0];
+            new_byte[1] = INV_S_BOX_MATRIX[a.return_int()][b.return_int()][1];
+            a.initialize(new_byte[0], 4);
+            b.initialize(new_byte[1], 4);
+            state->set_byte(i, j, a + b);
+        }
+    }
+}
+
+
+void inv_shift_rows(ByteMatrix* state)
+{
+    for (int i = 1; i<4; i++)
+    {
+        state->cycle_rotate_right(i, i);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
